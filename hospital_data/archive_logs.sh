@@ -11,16 +11,23 @@ mkdir -p "$ARCHIVE_DIR"
 #files to be logged
 LOG_FILES=("heart_rate_log.log" "temperature_log.log" "water_usage_log.log")
 
+#welcome Menu
+echo -e "\n \t WELCOME TO GROUP10 AUTOMATED LOG MANAGEMENT SYSTEM \n"
+sleep 1
+
 #select menu
 echo " Choose log file to archive:"
+
 #iteratively list the log files
 for i in "${!LOG_FILES[@]}"; do
   printf "%d) %s\n" "$((i+1))" "${LOG_FILES[$i]}"
 done
 
 # Prompt user input
-read -rp "Enter the number of your choice: " choice
+read -rp "Enter the number of your choice [1-3]: " choice
 
+
+#get user choice and check if it is between 1-3
 if [[ "$choice" =~ ^[1-3]$ ]]; then
   selected_log="${LOG_FILES[$((choice-1))]}"
   full_path="$LOG_DIR/$selected_log"
@@ -33,13 +40,32 @@ if [[ "$choice" =~ ^[1-3]$ ]]; then
 
   # Create archive name
   timestamp=$(date +"%Y%m%d-%H%M%S")                         # timestamp
-  archive_name="${selected_log%.log}-$timestamp.tar.gz"     #archive name
+  archive_name="${selected_log%.log}-$timestamp.log"     #archive name
+  
+  # Determine correct subdirectory using if statements
+  if [[ "$selected_log" == "heart_rate_log.log" ]]; then
+    DEST_DIR="$ARCHIVE_DIR/heart_data_archive"
+  elif [[ "$selected_log" == "temperature_log.log" ]]; then
+    DEST_DIR="$ARCHIVE_DIR/temperature_data_archive"
+  elif [[ "$selected_log" == "water_usage_log.log" ]]; then
+    DEST_DIR="$ARCHIVE_DIR/water_usage_data_archive"
+  else
+    echo "Unknown log file. Cannot determine archive folder."
+    exit 1
+  fi
+
+# Ensure the destination directory exists
+  mkdir -p "$DEST_DIR"
 
  # Create archive in ARCHIVE_DIR
-  tar -czf "$ARCHIVE_DIR/$archive_name" -C "$LOG_DIR" "$selected_log"
+  echo -e "\n \t  Archiving '$selected_log'..."
+  sleep 2 
+  tar -czf "$DEST_DIR/$archive_name" -C "$LOG_DIR" "$selected_log"
 
-  echo "Archived '$selected_log' to '$ARCHIVE_DIR/$archive_name'"
+  echo -e "\n Successfully Archived '$selected_log' to '$DEST_DIR/$archive_name'\n"
 else
-  echo "Invalid choice. Please run the script again and select a valid number."
+  echo -e "\n \t  PROCESSING..."
+  sleep 1
+  echo -e "\n Invalid choice. Please run the script again and select a valid number.\n"
   exit 1
 fi
