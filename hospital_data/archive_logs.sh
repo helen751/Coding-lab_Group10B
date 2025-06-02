@@ -60,7 +60,12 @@ if [[ "$choice" =~ ^[1-3]$ ]]; then
  # Create archive in ARCHIVE_DIR
   echo -e "\n \t  Archiving '$selected_log'..."
   sleep 2 
-  tar -czf "$DEST_DIR/$archive_name" -C "$LOG_DIR" "$selected_log"
+
+   # Move and rename the log file
+  mv "$full_path" "$DEST_DIR/$archive_name"
+
+  # Create new empty log file
+  touch "$full_path"
 
   echo -e "\n Successfully Archived '$selected_log' to '$DEST_DIR/$archive_name'\n"
 else
