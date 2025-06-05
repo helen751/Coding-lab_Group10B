@@ -1,6 +1,6 @@
 #!/bin/bash
 analyze_heart_rate() {
-    file_name="hospital_data/active_logs/heart_rate_log.log"
+    file_name="../active_logs/heart_rate_log.log"
 
     # Check if the file exists
     if [ ! -f "$file_name" ]; then
@@ -27,7 +27,7 @@ analyze_heart_rate() {
 
 
 analyze_temperature() {
-    file_name="hospital_data/active_logs/temperature.log"
+    file_name="../active_logs/temperature_log.log"
 
     # Check if the file exists
     if [ ! -f "$file_name" ]; then
@@ -41,7 +41,6 @@ analyze_temperature() {
     for device in $devices; do
         count_number_of_occurance=$(awk -v device="$device" '$3 == device {count++} END {print count}' "$file_name")
         echo "$device appears $count_number_of_occurance times in the temperature.log file"
-        done
 
         first_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | head -n 1)
         echo "$device first monitored on $first_timestamp"
