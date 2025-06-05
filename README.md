@@ -159,4 +159,12 @@ Once the file is confirmed to be there, the function goes through the log and do
 
 ## analyze_water_usage
 
+In this function, we focus on processing the water usage logs to extract meaningful result. Its main focus are:
+- Checking if the log file exists. If not, it gives error as a result.
+- Identifies unique monitoring devices from the log data.
+- Counts the number of times each device occurs in the water usage records.
+- Prints time stamps from the first and last records.
+- Finally, it displays results in a good format.
+
+This code will make analysis on the water used from logged data and after makes useful tracking consumption trends and detect any anomalities.
 <!-- comment here  -->
