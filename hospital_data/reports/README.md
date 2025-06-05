@@ -39,7 +39,14 @@ They all work in a similar way.
 
 ## analyze_heart_rate
 
-<!-- comment here  -->
+In this function, we perform a series of tasks. But before doing that, we first check if the heart_rate_log.log file exists. If it doesn't, we crash the app and prompt the user to re-run it. This gives the user a chance to resolve the issue before trying again. After making sure that the file exists, we:
+
+1. Count the number of heart rate monitors recorded in the log file.
+2. Check how many times each monitor appears in the log file.
+3. Determine the first time each monitor was used.
+4. Determine the last time each monitor was used.
+
+Each results is appended in the `analysis_report.txt` file.
 
 ## analyze_temperature
 
