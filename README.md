@@ -114,14 +114,17 @@ To process the user's choice, we used case statement. If the user enter anything
         "1")
             echo "You made the first choice!"
             analyze_heart_rate
+            echo "Heart rate log file was successfully analyzed!"
             ;;
         "2")
             echo "You made the second choice!"
             analyze_temperature
+            echo "Temperature log file was successfully analyzed!"
             ;;
         "3")
             echo "You made the third choice!"
             analyze_water_usage
+            echo "Water usage log file was successfully analyzed!"
             ;;
         *)
             echo "Invalid choice. Please choose 1, 2, or 3."
@@ -146,7 +149,13 @@ Each results is appended in the `analysis_report.txt` file.
 
 ## analyze_temperature
 
-<!-- comment here  -->
+This function focuses on analyzing temperature data from the log file. Before starting, it checks if the temperature_log.log file exists. If the file isn’t found, the program stops and asks the user to run it again after fixing the issue. This makes sure we don’t move forward without the data we need.
+
+Once the file is confirmed to be there, the function goes through the log and does the following:
+1. Counts how many different temperature monitors are recorded in the file.
+2. Checks how many times each temperature monitor appears.
+3. Finds the first time each temperature monitor was used.
+4. Finds the last time each temperature monitor was used.
 
 ## analyze_water_usage
 
