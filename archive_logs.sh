@@ -1,79 +1,76 @@
 #!/bin/bash
 
-# Define log files and archive directories
-HEART_LOG="hospital_data/active_logs/heart_rate_log.log"
-TEMP_LOG="hospital_data/active_logs/temperature_log.log"
-WATER_LOG="hospital_data/active_logs/water_usage_log.log"
+# Set directory where active logs are stored
+LOG_DIR="hospital_data/active_logs"
+#directory to store the newly archived file:
+ARCHIVE_DIR="hospital_data/archived_logs"
+# Ensure archive directory exists
+mkdir -p "$ARCHIVE_DIR"
 
-HEART_ARCHIVE_DIR="hospital_data/archived_logs/heart_data_archive"
-TEMP_ARCHIVE_DIR="hospital_data/archived_logs/temperature_data_archive"
-WATER_ARCHIVE_DIR="hospital_data/archived_logs/water_data_archive"
 
-# Function to archive log file
-archive_log() {
-    local log_file=$1
-    local archive_dir=$2
-    local base_name=$3  # e.g., heart_rate_log
+#files to be logged
+LOG_FILES=("heart_rate_log.log" "temperature_log.log" "water_usage_log.log")
 
-    # Check if log file exists
-    if [[ ! -f "$log_file" ]]; then
-        echo "Error: Log file '$log_file' not found."
-        exit 1
-    fi
+#welcome Menu
+echo -e "\n \t WELCOME TO GROUP10 AUTOMATED LOG MANAGEMENT SYSTEM \n"
+sleep 1
 
-    # Check if archive directory exists; create if missing
-    if [[ ! -d "$archive_dir" ]]; then
-        echo "Archive directory '$archive_dir' does not exist. Creating it now..."
-        mkdir -p "$archive_dir"
-        if [[ $? -ne 0 ]]; then
-            echo "Error: Failed to create archive directory '$archive_dir'."
-            exit 1
-        fi
-    fi
+#select menu
+echo " Choose log file to archive:"
 
-    # Create timestamp
-    timestamp=$(date +"%Y-%m-%d_%H:%M:%S")
+#iteratively list the log files
+for i in "${!LOG_FILES[@]}"; do
+  printf "%d) %s\n" "$((i+1))" "${LOG_FILES[$i]}"
+done
 
-    # Define archive filename with timestamp
-    archive_file="${archive_dir}/${base_name}_${timestamp}.log"
+# Prompt user input
+read -rp "Enter the number of your choice [1-3]: " choice
 
-    echo "Archiving $log_file..."
-    mv "$log_file" "$archive_file"
 
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to move log file to archive."
-        exit 1
-    fi
+#get user choice and check if it is between 1-3
+if [[ "$choice" =~ ^[1-3]$ ]]; then
+  selected_log="${LOG_FILES[$((choice-1))]}"
+  full_path="$LOG_DIR/$selected_log"
+  
+  # Check if the log file exists
+  if [[ ! -f "$full_path" ]]; then
+    echo "Error: '$selected_log' does not exist."
+    exit 1
+  fi
 
-    # Create a new empty log file
-    touch "$log_file"
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to create new log file '$log_file'."
-        exit 1
-    fi
+  # Create archive name
+  timestamp=$(date +"%Y%m%d-%H%M%S")                         # timestamp
+  archive_name="${selected_log%.log}-$timestamp.log"     #archive name
+  
+  # Determine correct subdirectory using if statements
+  if [[ "$selected_log" == "heart_rate_log.log" ]]; then
+    DEST_DIR="$ARCHIVE_DIR/heart_data_archive"
+  elif [[ "$selected_log" == "temperature_log.log" ]]; then
+    DEST_DIR="$ARCHIVE_DIR/temperature_data_archive"
+  elif [[ "$selected_log" == "water_usage_log.log" ]]; then
+    DEST_DIR="$ARCHIVE_DIR/water_usage_data_archive"
+  else
+    echo "Unknown log file. Cannot determine archive folder."
+    exit 1
+  fi
 
-    echo "Successfully archived to '$archive_file'."
-}
+# Ensure the destination directory exists
+  mkdir -p "$DEST_DIR"
 
-# Main menu for user selection
-echo "Select log to archive:"
-echo "1) Heart Rate"
-echo "2) Temperature"
-echo "3) Water Usage"
-read -p "Enter choice (1-3): " choice
+ # Create archive in ARCHIVE_DIR
+  echo -e "\n \t  Archiving '$selected_log'..."
+  sleep 2 
 
-case "$choice" in
-    1)
-        archive_log "$HEART_LOG" "$HEART_ARCHIVE_DIR" "heart_rate_log"
-        ;;
-    2)
-        archive_log "$TEMP_LOG" "$TEMP_ARCHIVE_DIR" "temperature_log"
-        ;;
-    3)
-        archive_log "$WATER_LOG" "$WATER_ARCHIVE_DIR" "water_usage_log"
-        ;;
-    *)
-        echo "Invalid choice. Please enter a number between 1 and 3."
-        exit 1
-        ;;
-esac
+   # Move and rename the log file
+  mv "$full_path" "$DEST_DIR/$archive_name"
+
+  # Create new empty log file
+  touch "$full_path"
+
+  echo -e "\n Successfully Archived '$selected_log' to '$DEST_DIR/$archive_name'\n"
+else
+  echo -e "\n \t  PROCESSING..."
+  sleep 1
+  echo -e "\n Invalid choice. Please run the script again and select a valid number.\n"
+  exit 1
+fi
