@@ -40,7 +40,8 @@ analyze_temperature() {
 
     for device in $devices; do
         count_number_of_occurance=$(awk -v device="$device" '$3 == device {count++} END {print count}' "$file_name")
-        echo "$device appears $count_number_of_occurance times in the temperature.log file">>$output_file
+        echo "$device appears $count_number_of_occurance times in the temperature.log file"
+        
 
         first_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | head -n 1)
         echo "$device first monitored on $first_timestamp">>$output_file
