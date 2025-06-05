@@ -92,14 +92,17 @@ case $input in
 "1")
     echo "You made the first choice!"
     analyze_heart_rate
+    echo "Heart rate log file was successfully analyzed!"
     ;;
 "2")
     echo "You made the second choice!"
     analyze_temperature
+    echo "Temperature log file was successfully analyzed!"
     ;;
 "3")
     echo "You made the third choice!"
     analyze_water_usage
+    echo "Water usage log file was successfully analyzed!"
     ;;
 *)
     echo "Invalid choice. Please choose 1, 2, or 3."

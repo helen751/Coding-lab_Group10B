@@ -1,11 +1,4 @@
 #!/bin/bash
-# archive_logs.sh
-# Description: This script allows users to choose the type of log file—heart rate, temperature, or water usage—
-# for input. It archives the selected log by moving it to its respective folder, renames it using
-# the current date and time, and then creates a new empty file for continued logging.
-# Author: Solomon-211
-# Project: Hospital Data Monitoring System
-# Date: June 2025
 
 # Define log files and archive directories
 HEART_LOG="hospital_data/active_logs/heart_rate_log.log"
