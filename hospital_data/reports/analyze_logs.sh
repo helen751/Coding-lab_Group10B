@@ -50,7 +50,32 @@ analyze_temperature() {
         echo 
     done
 }
-# analyze_water_usage() {}
+ analyze_water_usage() {
+ 
+file_name="hospital_data/active_logs/water_usage.log"
+
+    # Check if the file exists
+    if [ ! -f "$file_name" ]; then
+        echo "File not found: $file_name"
+        exit 1
+    fi
+
+    echo "Analysing Water Usage..."
+    # Check the devices we have
+    devices=$(awk '{print $3}' "$file_name" | sort | uniq)
+
+    for device in $devices; do
+        count_number_of_occurrence=$(awk -v device="$device" '$3 == device {count++} END {print count}' "$file_name")
+        echo "$device appears $count_number_of_occurrence times in the water_usage.log file"
+
+        first_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | head -n 1)
+        echo "$device first monitored on $first_timestamp"
+
+        last_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | tail -n 1)
+        echo "$device last monitored on $last_timestamp"
+        echo
+    done
+ }
 
 
 
