@@ -1,75 +1,98 @@
 # Task 1: Interactive Archival Script (archive_logs.sh)
 
-## Hospital Data Monitoring & Archival System
+# 📦 Group10 Automated Log Management System
 
-This project was to develop an automated log management system that:
+This Bash script automates the process of **archiving hospital log files** such as heart rate, temperature, and water usage logs. It is designed to:
+- Prompt the user to select a log file to archive.
+- Move and rename the selected log file with a timestamp.
+- Create a new, empty version of the original log file.
+- Organize archived logs into categorized subdirectories.
 
-1. Collects real-time patient health metrics and resource usage data
-2. Provides controlled log archiving with user selection
-3. Generates analytical reports with device statistics and temporal patterns
-4. Demonstrates proficiency in: interactive shell scripting, log file processing and data analysis with Linux tools.
+---
 
-## Project Structure
+## 🧰 File Structure
 
-Logs files for users' inputs
-
-```bash
-    heart_rate.log
-    temperature.log
-    water_usage.log
+```
+hospital_data/
+├── active_logs/
+│   ├── heart_rate_log.log
+│   ├── temperature_log.log
+│   └── water_usage_log.log
+└── archived_logs/
+    ├── heart_data_archive/
+    ├── temperature_data_archive/
+    └── water_usage_data_archive/
 ```
 
-Archive folders for storing old logs
+---
 
-```bash
-    heart_data_archive/
-    temperature_data_archive/
-    water_data_archive/
+## 🚀 Features
+
+- Interactive selection of which log to archive.
+- Timestamped archive file names (e.g., `heart_rate_log-20250605-143015.log`).
+- Logs are moved to clearly named folders based on their type.
+- Original log file is replaced with a new, empty file (preserves file path for other systems).
+- Directory structure is created automatically if it doesn’t exist.
+
+---
+
+## 🖥️ How to Use
+
+1. Ensure the script is executable:
+   ```bash
+   chmod +x archive_logs.sh
+   ```
+
+2. Run the script:
+   ```bash
+   ./archive_logs.sh
+   ```
+
+3. Follow the on-screen menu:
+   ```
+   Choose log file to archive:
+   1) heart_rate_log.log
+   2) temperature_log.log
+   3) water_usage_log.log
+   ```
+
+4. Enter a number (1–3) to select which file to archive.
+
+---
+
+## 📂 What Happens During Archiving?
+
+If you select `heart_rate_log.log`, the script will:
+
+- Move `hospital_data/active_logs/heart_rate_log.log` to  
+  `hospital_data/archived_logs/heart_data_archive/heart_rate_log-YYYYMMDD-HHMMSS.log`
+
+- Then, it creates a **new empty** `heart_rate_log.log` back in the `active_logs` directory.
+
+---
+
+## ⚠️ Notes
+
+- If the selected log file does not exist, the script will display an error and exit.
+- If an invalid option is selected, the script will ask you to re-run it.
+
+---
+
+## ✅ Example Output
+
+```text
+WELCOME TO GROUP10 AUTOMATED LOG MANAGEMENT SYSTEM
+
+Choose log file to archive:
+1) heart_rate_log.log
+2) temperature_log.log
+3) water_usage_log.log
+Enter the number of your choice [1-3]: 1
+
+    Archiving 'heart_rate_log.log'...
+
+Successfully Archived 'heart_rate_log.log' to 'hospital_data/archived_logs/heart_data_archive/heart_rate_log-20250605-153000.log'
 ```
-
-- `archive_logs.sh` For archiving logs file into their corresponding folders
-- `analyze_logs.sh`For analyzing or managing logs
-- `README.md` for explaining the scripting process
-
-## Scripting process
-
-After setting-up the python simulators and directories structure, we divided the required tasks based on:
-
-- Interactive Archival script `./archive_logs.sh`
-- Intelligent Analysis script `./analyze_logs.sh`
-
-1. The first task is to clone the repo into your local machine using: `git clone https://github.com/helen751/Coding-lab_Group10B.git`
-2. `cd into Coding-lab_Group10B`
-3. `git pull origin archived_logs`
-4. Then `git status` to check whether you are in the origin branch
-
-## Feature implementation
-
-Implement a feature so that when the script is run, you are prompted by a numbered menu of log types to choose a running log file to archive:
-
-- We created the file using `vi archive_logs.sh`
-- Then wrote a script inside that can prompted by a number
-- Quit the vi editor using esc. Press caps lock and press "z" twice to return back.
-- We used `chmod +x archive_logs.sh` to make the file executable.
-- Run the script using `./archive_logs.sh`
-
-When the script runs the user will be prompted by this message:
-
-```bash
-Select log to archive:
-
-1. Heart Rate
-2. Temperature
-3. Water Usage
-```
-
-- When you just enter 1, 2, or 3, and the script will:
-- Move the selected log to the archive folder
-- Rename it using the current date and time
-- Create a fresh log file with the same name for new data stream
-
-If a user enters an invalid input (i.e: anything other than 1, 2 or 3), they will be shown this message.
-`Invalid choice. Please enter a number between 1 and 3.` and they will have to re-run the application again.
 
 # Task 2: Intelligent Analysis Script (analyze_logs.sh)
 
