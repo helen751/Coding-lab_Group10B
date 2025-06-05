@@ -2,7 +2,7 @@ HeartRate_Monitor_A appears 431 times in the heart_rate_log.log file
 HeartRate_Monitor_A first monitored on 2025-06-01 11:06:49
 HeartRate_Monitor_A last monitored on 2025-06-01 11:13:59
 
-HeartRate_Monitor_B appears 431 times in the heart_rate_log.log file
+HeartRate_Monitor_B appears 432 times in the heart_rate_log.log file
 HeartRate_Monitor_B first monitored on 2025-06-01 11:06:49
 HeartRate_Monitor_B last monitored on 2025-06-01 11:13:59
 

@@ -1,87 +1,110 @@
 #!/bin/bash
-# archive_logs.sh
-# Description: This script allows users to choose the type of log file—heart rate, temperature, or water usage—
-# for input. It archives the selected log by moving it to its respective folder, renames it using
-# the current date and time, and then creates a new empty file for continued logging.
-# Author: Solomon-211
-# Project: Hospital Data Monitoring System
-# Date: June 2025
 
-# Define log files and archive directories
-HEART_LOG="heart_rate.log"
-TEMP_LOG="temperature.log"
-WATER_LOG="water_usage.log"
+output_file="hospital_data/reports/analysis_report.txt"
+analyze_heart_rate() {
+    file_name="hospital_data/active_logs/heart_rate_log.log"
 
-HEART_ARCHIVE_DIR="heart_data_archive"
-TEMP_ARCHIVE_DIR="temperature_data_archive"
-WATER_ARCHIVE_DIR="water_data_archive"
-
-# Function to archive log file
-archive_log() {
-    local log_file=$1
-    local archive_dir=$2
-    local base_name=$3  # e.g., heart_rate_log
-
-    # Check if log file exists
-    if [[ ! -f "$log_file" ]]; then
-        echo "Error: Log file '$log_file' not found."
+    # Check if the file exists
+    if [ ! -f "$file_name" ]; then
+        echo "File not found: $file_name"
         exit 1
     fi
 
-    # Check if archive directory exists; create if missing
-    if [[ ! -d "$archive_dir" ]]; then
-        echo "Archive directory '$archive_dir' does not exist. Creating it now..."
-        mkdir -p "$archive_dir"
-        if [[ $? -ne 0 ]]; then
-            echo "Error: Failed to create archive directory '$archive_dir'."
-            exit 1
-        fi
-    fi
+    # Check the devices we have 
+     devices=$(awk '{print $3}' "$file_name" | sort | uniq)
 
-    # Create timestamp
-    timestamp=$(date +"%Y-%m-%d_%H:%M:%S")
+    for device in $devices; do
+        count_number_of_occurance=$(awk -v device="$device" '$3 == device {count++} END {print count}' "$file_name")
+        echo "$device appears $count_number_of_occurance times in the heart_rate_log.log file">>$output_file
 
-    # Define archive filename with timestamp
-    archive_file="${archive_dir}/${base_name}_${timestamp}.log"
+        first_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | head -n 1)
+        echo "$device first monitored on $first_timestamp">>$output_file
 
-    echo "Archiving $log_file..."
-    mv "$log_file" "$archive_file"
-
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to move log file to archive."
-        exit 1
-    fi
-
-    # Create a new empty log file
-    touch "$log_file"
-    if [[ $? -ne 0 ]]; then
-        echo "Error: Failed to create new log file '$log_file'."
-        exit 1
-    fi
-
-    echo "Successfully archived to '$archive_file'."
+        last_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | tail -n 1)
+        echo "$device last monitored on $last_timestamp">>$output_file
+        echo>>$output_file 
+    done
 }
 
-# Main menu for user selection
-echo "Select log to archive:"
-echo "1) Heart Rate"
-echo "2) Temperature"
-echo "3) Water Usage"
-read -p "Enter choice (1-3): " choice
 
-case "$choice" in
-    1)
-        archive_log "$HEART_LOG" "$HEART_ARCHIVE_DIR" "heart_rate_log"
-        ;;
-    2)
-        archive_log "$TEMP_LOG" "$TEMP_ARCHIVE_DIR" "temperature_log"
-        ;;
-    3)
-        archive_log "$WATER_LOG" "$WATER_ARCHIVE_DIR" "water_usage_log"
-        ;;
-    *)
-        echo "Invalid choice. Please enter a number between 1 and 3."
+
+analyze_temperature() {
+    file_name="hospital_data/active_logs/temperature_log.log"
+
+    # Check if the file exists
+    if [ ! -f "$file_name" ]; then
+        echo "File not found: $file_name"
         exit 1
-        ;;
+    fi
+       echo "Analysing Temperature Sensors..."
+    # Check the devices we have 
+     devices=$(awk '{print $3}' "$file_name" | sort | uniq)
+
+    for device in $devices; do
+        count_number_of_occurance=$(awk -v device="$device" '$3 == device {count++} END {print count}' "$file_name")
+        echo "$device appears $count_number_of_occurance times in the temperature.log file">>$output_file
+
+        first_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | head -n 1)
+        echo "$device first monitored on $first_timestamp">>$output_file
+
+        last_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | tail -n 1)
+        echo "$device last monitored on $last_timestamp">>$output_file
+        echo>>$output_file
+    done
+}
+analyze_water_usage() {
+file_name="hospital_data/active_logs/water_usage_log.log"
+
+# Check if the file exists
+if [ ! -f "$file_name" ]; then
+    echo "File not found: $file_name"
+    exit 1
+fi
+
+echo "Analysing Water Usage..."
+# Check the devices we have
+devices=$(awk '{print $3}' "$file_name" | sort | uniq)
+
+for device in $devices; do
+    count_number_of_occurrence=$(awk -v device="$device" '$3 == device {count++} END {print count}' "$file_name")
+    echo "$device appears $count_number_of_occurrence times in the water_usage.log file">>$output_file
+
+    first_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | head -n 1)
+    echo "$device first monitored on $first_timestamp">>$output_file
+
+    last_timestamp=$(awk -v device="$device" 'device == $3 {print $1, $2 }' "$file_name" | tail -n 1)
+    echo "$device last monitored on $last_timestamp">>$output_file
+    echo>>$output_file
+done
+}
+
+
+
+
+echo "Select log file to analyze:"
+echo "1) Heart Rate (heart_rate.log)"
+echo "2) Temperature (temperature.log)"
+echo "3) Water Usage (water_usage.log)"
+
+read -p "Enter choice (1-3):" input
+
+case $input in
+"1")
+    echo "You made the first choice!"
+    analyze_heart_rate
+    ;;
+"2")
+    echo "You made the second choice!"
+    analyze_temperature
+    ;;
+"3")
+    echo "You made the third choice!"
+    analyze_water_usage
+    ;;
+*)
+    echo "Invalid choice. Please choose 1, 2, or 3."
+    exit 1
+    ;;
 esac
+
 
