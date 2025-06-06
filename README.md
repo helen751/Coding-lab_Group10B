@@ -168,3 +168,12 @@ In this function, we focus on processing the water usage logs to extract meaning
 
 This code will make analysis on the water used from logged data and after makes useful tracking consumption trends and detect any anomalities.
 <!-- comment here  -->
+
+## This Project was developed by these active Group 10B Contributors:
+
+- Helen Ugoeze Okereke
+- Brian Kiguru Mahui
+- Gilbert Ntivunwa
+- Rebakure Kevin
+- Solomon Thiong Garang Leek
+- Umutoni NadaUmutoni Nada
